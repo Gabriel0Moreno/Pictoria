@@ -1,0 +1,749 @@
+<html lang="es"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Precios - Pictoria</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #f8f8f8;
+            color: #333;
+        }
+        
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #000;
+            cursor: pointer;
+        }
+        
+        .slider::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #000;
+            cursor: pointer;
+            border: none;
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .hover-scale {
+            transition: transform 0.3s ease;
+        }
+        
+        .hover-scale:hover {
+            transform: scale(1.02);
+        }
+        
+        .copy-button {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 100;
+            transition: all 0.3s ease;
+        }
+        
+        .copy-button:hover {
+            transform: scale(1.05);
+        }
+        
+        .copy-tooltip {
+            position: absolute;
+            bottom: 100%;
+            right: 0;
+            margin-bottom: 10px;
+            background-color: #333;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+            white-space: nowrap;
+        }
+        
+        .copy-tooltip::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            right: 10px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: #333 transparent transparent transparent;
+        }
+        
+        .show-tooltip {
+            opacity: 1;
+        }
+        
+        .shake {
+            animation: shake 0.5s;
+        }
+        
+        @keyframes shake {
+            0% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            50% { transform: translateX(5px); }
+            75% { transform: translateX(-5px); }
+            100% { transform: translateX(0); }
+        }
+        
+        .instagram-link {
+            color: #E1306C;
+            font-weight: 500;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+        
+        .instagram-link:hover {
+            text-decoration: underline;
+        }
+        
+        /* Estilos para impresión/PDF */
+        @media print {
+            body {
+                background-color: white;
+                padding: 20px;
+            }
+            
+            .no-print {
+                display: none !important;
+            }
+            
+            .print-only {
+                display: block !important;
+            }
+            
+            .container {
+                width: 100%;
+                max-width: 100%;
+            }
+            
+            header, footer, .copy-button {
+                display: none !important;
+            }
+            
+            .print-section {
+                page-break-inside: avoid;
+                margin-bottom: 20px;
+            }
+            
+            .print-header {
+                text-align: center;
+                margin-bottom: 20px;
+            }
+        }
+        
+        .print-only {
+            display: none;
+        }
+        
+        .whatsapp-button {
+            background-color: #25D366;
+            transition: background-color 0.3s ease;
+        }
+        
+        .whatsapp-button:hover {
+            background-color: #128C7E;
+        }
+
+        .instagram-button {
+            background-color: #E1306C;
+            transition: background-color 0.3s ease;
+        }
+        
+        .instagram-button:hover {
+            background-color: #C135A4;
+        }
+        
+        .google-maps-link:hover {
+            text-decoration: underline;
+        }
+
+    </style>
+<style>*, ::before, ::after{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }::backdrop{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }/* ! tailwindcss v3.4.16 | MIT License | https://tailwindcss.com */*,::after,::before{box-sizing:border-box;border-width:0;border-style:solid;border-color:#e5e7eb}::after,::before{--tw-content:''}:host,html{line-height:1.5;-webkit-text-size-adjust:100%;-moz-tab-size:4;tab-size:4;font-family:ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";font-feature-settings:normal;font-variation-settings:normal;-webkit-tap-highlight-color:transparent}body{margin:0;line-height:inherit}hr{height:0;color:inherit;border-top-width:1px}abbr:where([title]){-webkit-text-decoration:underline dotted;text-decoration:underline dotted}h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit}a{color:inherit;text-decoration:inherit}b,strong{font-weight:bolder}code,kbd,pre,samp{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;font-feature-settings:normal;font-variation-settings:normal;font-size:1em}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}table{text-indent:0;border-color:inherit;border-collapse:collapse}button,input,optgroup,select,textarea{font-family:inherit;font-feature-settings:inherit;font-variation-settings:inherit;font-size:100%;font-weight:inherit;line-height:inherit;letter-spacing:inherit;color:inherit;margin:0;padding:0}button,select{text-transform:none}button,input:where([type=button]),input:where([type=reset]),input:where([type=submit]){-webkit-appearance:button;background-color:transparent;background-image:none}:-moz-focusring{outline:auto}:-moz-ui-invalid{box-shadow:none}progress{vertical-align:baseline}::-webkit-inner-spin-button,::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}summary{display:list-item}blockquote,dd,dl,figure,h1,h2,h3,h4,h5,h6,hr,p,pre{margin:0}fieldset{margin:0;padding:0}legend{padding:0}menu,ol,ul{list-style:none;margin:0;padding:0}dialog{padding:0}textarea{resize:vertical}input::placeholder,textarea::placeholder{opacity:1;color:#9ca3af}[role=button],button{cursor:pointer}:disabled{cursor:default}audio,canvas,embed,iframe,img,object,svg,video{display:block;vertical-align:middle}img,video{max-width:100%;height:auto}[hidden]:where(:not([hidden=until-found])){display:none}.container{width:100%}@media (min-width: 640px){.container{max-width:640px}}@media (min-width: 768px){.container{max-width:768px}}@media (min-width: 1024px){.container{max-width:1024px}}@media (min-width: 1280px){.container{max-width:1280px}}@media (min-width: 1536px){.container{max-width:1536px}}.fixed{position:fixed}.inset-0{inset:0px}.z-50{z-index:50}.mx-4{margin-left:1rem;margin-right:1rem}.mx-auto{margin-left:auto;margin-right:auto}.mb-2{margin-bottom:0.5rem}.mb-4{margin-bottom:1rem}.mb-6{margin-bottom:1.5rem}.mb-8{margin-bottom:2rem}.mr-2{margin-right:0.5rem}.mt-1{margin-top:0.25rem}.mt-2{margin-top:0.5rem}.mt-4{margin-top:1rem}.mt-8{margin-top:2rem}.block{display:block}.flex{display:flex}.grid{display:grid}.hidden{display:none}.h-2{height:0.5rem}.h-5{height:1.25rem}.h-6{height:1.5rem}.min-h-screen{min-height:100vh}.w-5{width:1.25rem}.w-6{width:1.5rem}.w-full{width:100%}.max-w-4xl{max-width:56rem}.max-w-md{max-width:28rem}.flex-grow{flex-grow:1}.cursor-pointer{cursor:pointer}.appearance-none{-webkit-appearance:none;appearance:none}.grid-cols-1{grid-template-columns:repeat(1, minmax(0, 1fr))}.flex-col{flex-direction:column}.items-center{align-items:center}.justify-end{justify-content:flex-end}.justify-center{justify-content:center}.justify-between{justify-content:space-between}.gap-3{gap:0.75rem}.gap-4{gap:1rem}.space-y-3 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(0.75rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(0.75rem * var(--tw-space-y-reverse))}.rounded{border-radius:0.25rem}.rounded-full{border-radius:9999px}.rounded-lg{border-radius:0.5rem}.border{border-width:1px}.border-t{border-top-width:1px}.border-gray-200{--tw-border-opacity:1;border-color:rgb(229 231 235 / var(--tw-border-opacity, 1))}.border-gray-300{--tw-border-opacity:1;border-color:rgb(209 213 219 / var(--tw-border-opacity, 1))}.bg-black{--tw-bg-opacity:1;background-color:rgb(0 0 0 / var(--tw-bg-opacity, 1))}.bg-gray-200{--tw-bg-opacity:1;background-color:rgb(229 231 235 / var(--tw-bg-opacity, 1))}.bg-gray-50{--tw-bg-opacity:1;background-color:rgb(249 250 251 / var(--tw-bg-opacity, 1))}.bg-white{--tw-bg-opacity:1;background-color:rgb(255 255 255 / var(--tw-bg-opacity, 1))}.bg-opacity-50{--tw-bg-opacity:0.5}.p-2{padding:0.5rem}.p-3{padding:0.75rem}.p-4{padding:1rem}.p-6{padding:1.5rem}.px-4{padding-left:1rem;padding-right:1rem}.px-6{padding-left:1.5rem;padding-right:1.5rem}.py-2{padding-top:0.5rem;padding-bottom:0.5rem}.py-3{padding-top:0.75rem;padding-bottom:0.75rem}.py-6{padding-top:1.5rem;padding-bottom:1.5rem}.py-8{padding-top:2rem;padding-bottom:2rem}.pt-3{padding-top:0.75rem}.pt-6{padding-top:1.5rem}.text-center{text-align:center}.text-2xl{font-size:1.5rem;line-height:2rem}.text-3xl{font-size:1.875rem;line-height:2.25rem}.text-lg{font-size:1.125rem;line-height:1.75rem}.text-sm{font-size:0.875rem;line-height:1.25rem}.text-xl{font-size:1.25rem;line-height:1.75rem}.text-xs{font-size:0.75rem;line-height:1rem}.font-bold{font-weight:700}.font-light{font-weight:300}.font-medium{font-weight:500}.tracking-wide{letter-spacing:0.025em}.tracking-wider{letter-spacing:0.05em}.text-blue-600{--tw-text-opacity:1;color:rgb(37 99 235 / var(--tw-text-opacity, 1))}.text-gray-500{--tw-text-opacity:1;color:rgb(107 114 128 / var(--tw-text-opacity, 1))}.text-white{--tw-text-opacity:1;color:rgb(255 255 255 / var(--tw-text-opacity, 1))}.shadow-lg{--tw-shadow:0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);--tw-shadow-colored:0 10px 15px -3px var(--tw-shadow-color), 0 4px 6px -4px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.transition-all{transition-property:all;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.transition-colors{transition-property:color, background-color, border-color, fill, stroke, -webkit-text-decoration-color;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke, -webkit-text-decoration-color;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.hover\:bg-gray-100:hover{--tw-bg-opacity:1;background-color:rgb(243 244 246 / var(--tw-bg-opacity, 1))}.hover\:bg-gray-800:hover{--tw-bg-opacity:1;background-color:rgb(31 41 55 / var(--tw-bg-opacity, 1))}.focus\:border-transparent:focus{border-color:transparent}.focus\:outline-none:focus{outline:2px solid transparent;outline-offset:2px}.focus\:ring-2:focus{--tw-ring-offset-shadow:var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);--tw-ring-shadow:var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color);box-shadow:var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000)}.focus\:ring-black:focus{--tw-ring-opacity:1;--tw-ring-color:rgb(0 0 0 / var(--tw-ring-opacity, 1))}.peer:checked ~ .peer-checked\:border-black{--tw-border-opacity:1;border-color:rgb(0 0 0 / var(--tw-border-opacity, 1))}.peer:checked ~ .peer-checked\:bg-gray-50{--tw-bg-opacity:1;background-color:rgb(249 250 251 / var(--tw-bg-opacity, 1))}@media (min-width: 768px){.md\:grid-cols-2{grid-template-columns:repeat(2, minmax(0, 1fr))}.md\:p-8{padding:2rem}.md\:text-3xl{font-size:1.875rem;line-height:2.25rem}.md\:text-4xl{font-size:2.25rem;line-height:2.5rem}}</style><style>*, ::before, ::after{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }::backdrop{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }/* ! tailwindcss v3.4.17 | MIT License | https://tailwindcss.com */*,::after,::before{box-sizing:border-box;border-width:0;border-style:solid;border-color:#e5e7eb}::after,::before{--tw-content:''}:host,html{line-height:1.5;-webkit-text-size-adjust:100%;-moz-tab-size:4;tab-size:4;font-family:ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";font-feature-settings:normal;font-variation-settings:normal;-webkit-tap-highlight-color:transparent}body{margin:0;line-height:inherit}hr{height:0;color:inherit;border-top-width:1px}abbr:where([title]){-webkit-text-decoration:underline dotted;text-decoration:underline dotted}h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit}a{color:inherit;text-decoration:inherit}b,strong{font-weight:bolder}code,kbd,pre,samp{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;font-feature-settings:normal;font-variation-settings:normal;font-size:1em}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}table{text-indent:0;border-color:inherit;border-collapse:collapse}button,input,optgroup,select,textarea{font-family:inherit;font-feature-settings:inherit;font-variation-settings:inherit;font-size:100%;font-weight:inherit;line-height:inherit;letter-spacing:inherit;color:inherit;margin:0;padding:0}button,select{text-transform:none}button,input:where([type=button]),input:where([type=reset]),input:where([type=submit]){-webkit-appearance:button;background-color:transparent;background-image:none}:-moz-focusring{outline:auto}:-moz-ui-invalid{box-shadow:none}progress{vertical-align:baseline}::-webkit-inner-spin-button,::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}summary{display:list-item}blockquote,dd,dl,figure,h1,h2,h3,h4,h5,h6,hr,p,pre{margin:0}fieldset{margin:0;padding:0}legend{padding:0}menu,ol,ul{list-style:none;margin:0;padding:0}dialog{padding:0}textarea{resize:vertical}input::placeholder,textarea::placeholder{opacity:1;color:#9ca3af}[role=button],button{cursor:pointer}:disabled{cursor:default}audio,canvas,embed,iframe,img,object,svg,video{display:block;vertical-align:middle}img,video{max-width:100%;height:auto}[hidden]:where(:not([hidden=until-found])){display:none}.container{width:100%}@media (min-width: 640px){.container{max-width:640px}}@media (min-width: 768px){.container{max-width:768px}}@media (min-width: 1024px){.container{max-width:1024px}}@media (min-width: 1280px){.container{max-width:1280px}}@media (min-width: 1536px){.container{max-width:1536px}}.fixed{position:fixed}.inset-0{inset:0px}.z-50{z-index:50}.mx-4{margin-left:1rem;margin-right:1rem}.mx-auto{margin-left:auto;margin-right:auto}.mb-2{margin-bottom:0.5rem}.mb-4{margin-bottom:1rem}.mb-6{margin-bottom:1.5rem}.mb-8{margin-bottom:2rem}.mr-2{margin-right:0.5rem}.mt-1{margin-top:0.25rem}.mt-2{margin-top:0.5rem}.mt-4{margin-top:1rem}.mt-8{margin-top:2rem}.block{display:block}.flex{display:flex}.grid{display:grid}.hidden{display:none}.h-2{height:0.5rem}.h-5{height:1.25rem}.h-6{height:1.5rem}.h-64{height:16rem}.min-h-screen{min-height:100vh}.w-5{width:1.25rem}.w-6{width:1.5rem}.w-full{width:100%}.max-w-4xl{max-width:56rem}.max-w-md{max-width:28rem}.flex-grow{flex-grow:1}.cursor-pointer{cursor:pointer}.appearance-none{-webkit-appearance:none;appearance:none}.grid-cols-1{grid-template-columns:repeat(1, minmax(0, 1fr))}.flex-col{flex-direction:column}.items-center{align-items:center}.justify-end{justify-content:flex-end}.justify-center{justify-content:center}.justify-between{justify-content:space-between}.gap-3{gap:0.75rem}.gap-4{gap:1rem}.space-y-3 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(0.75rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(0.75rem * var(--tw-space-y-reverse))}.overflow-hidden{overflow:hidden}.rounded{border-radius:0.25rem}.rounded-full{border-radius:9999px}.rounded-lg{border-radius:0.5rem}.border{border-width:1px}.border-t{border-top-width:1px}.border-gray-200{--tw-border-opacity:1;border-color:rgb(229 231 235 / var(--tw-border-opacity, 1))}.border-gray-300{--tw-border-opacity:1;border-color:rgb(209 213 219 / var(--tw-border-opacity, 1))}.bg-black{--tw-bg-opacity:1;background-color:rgb(0 0 0 / var(--tw-bg-opacity, 1))}.bg-gray-200{--tw-bg-opacity:1;background-color:rgb(229 231 235 / var(--tw-bg-opacity, 1))}.bg-gray-50{--tw-bg-opacity:1;background-color:rgb(249 250 251 / var(--tw-bg-opacity, 1))}.bg-white{--tw-bg-opacity:1;background-color:rgb(255 255 255 / var(--tw-bg-opacity, 1))}.bg-opacity-50{--tw-bg-opacity:0.5}.p-2{padding:0.5rem}.p-3{padding:0.75rem}.p-4{padding:1rem}.p-6{padding:1.5rem}.px-4{padding-left:1rem;padding-right:1rem}.px-6{padding-left:1.5rem;padding-right:1.5rem}.py-2{padding-top:0.5rem;padding-bottom:0.5rem}.py-3{padding-top:0.75rem;padding-bottom:0.75rem}.py-6{padding-top:1.5rem;padding-bottom:1.5rem}.py-8{padding-top:2rem;padding-bottom:2rem}.pt-3{padding-top:0.75rem}.pt-6{padding-top:1.5rem}.text-center{text-align:center}.text-2xl{font-size:1.5rem;line-height:2rem}.text-3xl{font-size:1.875rem;line-height:2.25rem}.text-lg{font-size:1.125rem;line-height:1.75rem}.text-sm{font-size:0.875rem;line-height:1.25rem}.text-xl{font-size:1.25rem;line-height:1.75rem}.text-xs{font-size:0.75rem;line-height:1rem}.font-bold{font-weight:700}.font-light{font-weight:300}.font-medium{font-weight:500}.tracking-wide{letter-spacing:0.025em}.tracking-wider{letter-spacing:0.05em}.text-blue-600{--tw-text-opacity:1;color:rgb(37 99 235 / var(--tw-text-opacity, 1))}.text-gray-500{--tw-text-opacity:1;color:rgb(107 114 128 / var(--tw-text-opacity, 1))}.text-red-500{--tw-text-opacity:1;color:rgb(239 68 68 / var(--tw-text-opacity, 1))}.text-white{--tw-text-opacity:1;color:rgb(255 255 255 / var(--tw-text-opacity, 1))}.shadow-lg{--tw-shadow:0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);--tw-shadow-colored:0 10px 15px -3px var(--tw-shadow-color), 0 4px 6px -4px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.transition-all{transition-property:all;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.transition-colors{transition-property:color, background-color, border-color, fill, stroke, -webkit-text-decoration-color;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke, -webkit-text-decoration-color;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.hover\:bg-gray-100:hover{--tw-bg-opacity:1;background-color:rgb(243 244 246 / var(--tw-bg-opacity, 1))}.hover\:bg-gray-800:hover{--tw-bg-opacity:1;background-color:rgb(31 41 55 / var(--tw-bg-opacity, 1))}.focus\:border-transparent:focus{border-color:transparent}.focus\:outline-none:focus{outline:2px solid transparent;outline-offset:2px}.focus\:ring-2:focus{--tw-ring-offset-shadow:var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);--tw-ring-shadow:var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color);box-shadow:var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000)}.focus\:ring-black:focus{--tw-ring-opacity:1;--tw-ring-color:rgb(0 0 0 / var(--tw-ring-opacity, 1))}.peer:checked ~ .peer-checked\:border-black{--tw-border-opacity:1;border-color:rgb(0 0 0 / var(--tw-border-opacity, 1))}.peer:checked ~ .peer-checked\:bg-gray-50{--tw-bg-opacity:1;background-color:rgb(249 250 251 / var(--tw-bg-opacity, 1))}@media (min-width: 768px){.md\:grid-cols-2{grid-template-columns:repeat(2, minmax(0, 1fr))}.md\:grid-cols-3{grid-template-columns:repeat(3, minmax(0, 1fr))}.md\:p-8{padding:2rem}.md\:text-3xl{font-size:1.875rem;line-height:2.25rem}.md\:text-4xl{font-size:2.25rem;line-height:2.5rem}}</style></head>
+<body>
+    <div class="min-h-screen flex flex-col">
+        <header class="bg-black text-white py-6 no-print">
+            <div class="container mx-auto px-4 text-center">
+                <h1 class="text-3xl md:text-4xl font-light tracking-wider">PICTORIA</h1>
+                <p class="text-sm font-light tracking-wide mt-1">Retratos callejeros y de estudio</p>
+            </div>
+        </header>
+        
+        <div class="print-only print-header">
+            <h1 class="text-3xl font-light tracking-wider">PICTORIA</h1>
+            <p class="text-sm font-light tracking-wide mt-1">Retratos callejeros y de estudio.</p>
+            <p class="mt-4">Cotización de Servicios Fotográficos</p>
+        </div>
+        
+        <main class="flex-grow container mx-auto px-4 py-8">
+            <div class="max-w-4xl mx-auto">
+                <h2 class="text-2xl md:text-3xl font-light mb-8 text-center no-print">Calculadora de Precios</h2>
+                
+                <div class="bg-white rounded-lg shadow-lg p-6 md:p-8 print-section">
+                    <div class="mb-8">
+                        <h3 class="text-xl font-medium mb-4">Selecciona tus servicios</h3>
+                        
+                        <div class="mb-6">
+                            <label class="block text-sm font-medium mb-2">Tipo de sesión</label>
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                                <div class="hover-scale">
+                                    <input type="radio" id="street" name="sessionType" value="street" class="hidden peer" checked="">
+                                    <label for="street" class="block border border-gray-200 rounded-lg p-4 cursor-pointer peer-checked:border-black peer-checked:bg-gray-50 transition-all">
+                                        <span class="block font-medium">Callejero</span>
+                                        <span class="text-sm text-gray-500">Locaciones urbanas, luz natural y flash</span>
+                                    </label>
+                                </div>
+                                <div class="hover-scale">
+                                    <input type="radio" id="studio" name="sessionType" value="studio" class="hidden peer">
+                                    <label for="studio" class="block border border-gray-200 rounded-lg p-4 cursor-pointer peer-checked:border-black peer-checked:bg-gray-50 transition-all">
+                                        <span class="block font-medium">Estudio</span>
+                                        <span class="text-sm text-gray-500">Ambiente controlado, iluminación profesional</span>
+                                    </label>
+                                </div>
+                                <div class="hover-scale">
+                                    <input type="radio" id="event" name="sessionType" value="event" class="hidden peer">
+                                    <label for="event" class="block border border-gray-200 rounded-lg p-4 cursor-pointer peer-checked:border-black peer-checked:bg-gray-50 transition-all">
+                                        <span class="block font-medium">Fotografía de evento</span>
+                                        <span class="text-sm text-gray-500">Bodas, XV años, fiestas, conciertos, etc.</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="standardOptions" class="fade-in">
+                            <div class="mb-6">
+                                <label for="sessionHoursStandard" class="block text-sm font-medium mb-2">Duración de la sesión: <span id="hoursValueStandard">1</span> hora(s)</label>
+                                <input type="range" id="sessionHoursStandard" min="1" max="3" value="1" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider no-print">
+                                <div class="flex justify-between text-xs text-gray-500 mt-1 no-print">
+                                    <span>1h</span>
+                                    <span>2h</span>
+                                    <span>3h</span>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-6">
+                                <label for="deliveredPhotosStandard" class="block text-sm font-medium mb-2">Fotografías entregadas (solo digital): <span id="photosValueStandard">10</span></label>
+                                <input type="range" id="deliveredPhotosStandard" min="10" max="30" value="10" step="5" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider no-print">
+                                <div class="flex justify-between text-xs text-gray-500 mt-1 no-print">
+                                    <span>10</span>
+                                    <span>15</span>
+                                    <span>20</span>
+                                    <span>25</span>
+                                    <span>30</span>
+                                </div>
+                            </div>
+                        
+                            <!-- Fecha y hora (agregado) -->
+                            <div class="mb-6">
+                                <label for="sessionDateTimeStandard" class="block text-sm font-medium mb-2">
+                                    Fecha y hora del evento
+                                </label>
+                                <input type="datetime-local" id="sessionDateTimeStandard"
+                                    class="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent">
+                            </div></div>
+
+                        <div id="eventOptions" class="fade-in hidden">
+                            <div class="mb-6">
+                                <label for="sessionHoursEvent" class="block text-sm font-medium mb-2">Duración de la sesión: <span id="hoursValueEvent">1</span> hora(s)</label>
+                                <input type="range" id="sessionHoursEvent" min="1" max="6" value="1" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider no-print">
+                                <div class="flex justify-between text-xs text-gray-500 mt-1 no-print">
+                                    <span>1h</span>
+                                    <span>2h</span>
+                                    <span>3h</span>
+                                    <span>4h</span>
+                                    <span>5h</span>
+                                    <span>6h</span>
+                                </div>
+                            </div>
+                            <div class="mb-6">
+                                <label for="eventInfo" class="block text-sm font-medium mb-2">Información del evento</label>
+                                <textarea id="eventInfo" rows="4" class="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent" placeholder="Describe tu evento, por ejemplo: 
+- Tipo de evento: Boda civil 
+- Ciudad: Tuxtla Gutiérrez 
+- Estilo de fotografia deseada: De revista, retro, etc"></textarea>
+                                <p class="text-xs text-gray-500 mt-1">
+                                    <strong class="font-bold text-red-500">Advertencia:</strong> El costo puede variar y se pueden generar viáticos adicionales dependiendo de la ubicación del evento.
+                                </p>
+                            </div>
+                            
+                            <div class="mb-6">
+                                <label class="block text-sm font-medium mb-2">Ubicación del evento</label>
+                                <div class="w-full h-64 border border-gray-300 rounded-lg overflow-hidden mb-4">
+                                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3791.705199650493!2d-93.1165688849767!3d16.75338108846383!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x85966d6d8d6d6d6d%3A0x86d6d6d6d6d6d6d6!2sTuxtla%20Guti%C3%A9rrez%2C%20Chis.!5e0!3m2!1ses-419!2smx!4v1625232000000!5m2!1ses-419!2smx" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+                                </div>
+                                <label for="eventLocationInput" class="block text-sm font-medium mb-2">Dirección o enlace de Google Maps</label>
+                                <input type="text" id="eventLocationInput" class="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent" placeholder="Pega la dirección o el enlace del evento aquí">
+                                <p class="text-xs text-gray-500 mt-1">Copia y pega la ubicación que deseas enviar por WhatsApp.</p>
+                            </div>
+                            <!-- Fecha y hora (agregado) -->
+                            <div class="mb-6">
+                                <label for="sessionDateTimeEvent" class="block text-sm font-medium mb-2">
+                                    Fecha y hora del evento
+                                </label>
+                                <input type="datetime-local" id="sessionDateTimeEvent"
+                                    class="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="border-t border-gray-200 pt-6 print-section">
+                        <h3 class="text-xl font-medium mb-4">Resumen de precios</h3>
+                        <div class="space-y-3">
+                            <div class="flex justify-between">
+                                <span id="sessionTypeSummary">Sesión fotográfica:</span>
+                                <span id="sessionPrice" class="font-medium">$600 MXN</span>
+                            </div>
+                            <div class="flex justify-between" id="photosPriceRow" style="display: flex;">
+                                <span>Fotografías entregadas:</span>
+                                <span id="photosPrice" class="font-medium">$200 MXN</span>
+                            </div>
+                            <div class="flex justify-between border-t border-gray-200 pt-3 text-lg">
+                                <span class="font-medium">Total:</span>
+                                <span id="totalPrice" class="font-bold">$800 MXN</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-8 no-print">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <button id="bookButton" class="whatsapp-button text-white py-3 px-6 rounded-lg transition-colors flex items-center justify-center w-full">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"></path>
+                                </svg>
+                                Reservar sesión por WhatsApp
+                            </button>
+                            <a href="https://www.instagram.com/gabriel0moreno" target="_blank" class="instagram-button text-white py-3 px-6 rounded-lg transition-colors flex items-center justify-center w-full no-print">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M12 2.163c3.204 0 3.584.012 4.851.07 3.253.148 4.757 1.652 4.905 4.905.058 1.267.07 1.647.07 4.851 0 3.204-.012 3.584-.07 4.851-.148 3.253-1.652-4.757-4.905-4.905-1.267-.058-1.647-.07-4.851-.07-3.204 0-3.584.012-4.851.07-3.253.148-4.757 1.652-4.905 4.905-.058 1.267-.07 1.647-.07 4.851 0-3.204.012-3.584.07-4.851.148-3.253 1.652-4.757 4.905-4.905 1.267-.058 1.647-.07 4.851-.07zm0-2.163c-3.259 0-3.667.014-4.943.071-4.103.185-5.618 1.693-5.797 5.797-.059 1.275-.071 1.683-.071 4.943s.014 3.668.071 4.943c.184 4.104 1.693 5.618 5.797 5.797 1.275.058 1.682.071 4.943.071s3.668-.014 4.943-.071c4.103-.184 5.618-1.692 5.797-5.797.058-1.275.071-1.683.071-4.943s-.014-3.667-.071-4.942c-.185-4.104-1.693-5.618-5.797-5.797-1.275-.059-1.683-.071-4.943-.071z"></path>
+                                </svg>
+                                Sígueme en Instagram
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mt-8 text-center text-sm text-gray-500 no-print">
+                    <p>Los precios pueden variar según requerimientos específicos.</p>
+                    <p class="mt-1">Contáctanos para una cotización personalizada.</p>
+                </div>
+                
+                <div class="print-only mt-8 print-section">
+                    <p class="text-center text-sm">Esta cotización es válida por 30 días a partir de la fecha de emisión.</p>
+                    <p class="text-center text-sm mt-2">Para más información, contáctanos en info@pictoria.com</p>
+                    <p class="text-center font-medium mt-4">¡Gracias por elegir Pictoria!</p>
+                </div>
+            </div>
+        </main>
+        
+        <footer class="bg-black text-white py-6 no-print">
+            <div class="container mx-auto px-4 text-center">
+                <p class="text-sm">© 2023 Pictoria. Todos los derechos reservados.</p>
+            </div>
+        </footer>
+        
+        <div id="bookingModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden no-print">
+            <div class="bg-white rounded-lg p-6 max-w-md w-full mx-4 fade-in">
+                <h3 class="text-xl font-medium mb-4">Reserva tu sesión</h3>
+                <p class="mb-4">Gracias por elegir Pictoria. Te contactaremos pronto para confirmar los detalles de tu sesión.</p>
+                <div class="mb-4 p-4 bg-gray-50 rounded-lg">
+                    <h4 class="font-medium mb-2">Resumen de tu reserva:</h4>
+                    <p id="bookingSummary" class="text-sm"></p>
+                </div>
+                <div class="flex justify-end">
+                    <button id="closeModal" class="bg-black text-white py-2 px-4 rounded hover:bg-gray-800 transition-colors">
+                        Cerrar
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <div id="passwordModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 no-print hidden">
+            <div class="bg-white rounded-lg p-6 max-w-md w-full mx-4 fade-in">
+                <h3 class="text-xl font-medium mb-4">Acceso restringido</h3>
+                <p class="mb-4">Ingresa la contraseña para copiar el código HTML:</p>
+                <div class="mb-4">
+                    <input type="password" id="passwordInput" class="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent" placeholder="Contraseña">
+                    <p id="passwordError" class="text-blue-600 text-sm mt-1 hidden">Sígueme en Instagram como: <span id="instagramLink" class="instagram-link">gabriel0moreno</span></p>
+                </div>
+                <div class="flex justify-between">
+                    <button id="cancelPassword" class="text-gray-500 py-2 px-4 rounded hover:bg-gray-100 transition-colors">
+                        Cancelar
+                    </button>
+                    <button id="submitPassword" class="bg-black text-white py-2 px-4 rounded hover:bg-gray-800 transition-colors">
+                        Verificar
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="copy-button no-print">
+            <button id="copyCodeButton" class="bg-black text-white p-3 rounded-full shadow-lg flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                </svg>
+            </button>
+            <span id="copyTooltip" class="copy-tooltip">Copiar código HTML</span>
+        </div>
+    </div>
+
+    <script>
+        // Constants (prices in MXN)
+        const PRICES = {
+            session: {
+                street: {
+                    1: 600,  // 1 hour street session
+                    2: 1100, // 2 hour street session
+                    3: 1500  // 3 hour street session
+                },
+                studio: {
+                    1: 700,  // 1 hour studio session
+                    2: 1300, // 2 hour studio session
+                    3: 1800  // 3 hour studio session
+                },
+                event: {
+                    1: 900,   // 1 hour event session
+                    2: 1820,  // 2 hour event session
+                    3: 2740,  // 3 hour event session
+                    4: 3660,  // 4 hour event session
+                    5: 4580,  // 5 hour event session
+                    6: 5500   // 6 hour event session
+                }
+            },
+            photos: {
+                street: {
+                    10: 200,  // 10 photos street
+                    15: 400,  // 15 photos street
+                    20: 600,  // 20 photos street
+                    25: 800,  // 25 photos street
+                    30: 1000  // 30 photos street
+                },
+                studio: {
+                    10: 300,  // 10 photos studio
+                    15: 600,  // 15 photos studio
+                    20: 900,  // 20 photos studio
+                    25: 1200, // 25 photos studio
+                    30: 1700  // 30 photos studio (to reach exactly 3500 with 3h session)
+                }
+            }
+        };
+        
+        // WhatsApp phone number
+        const WHATSAPP_PHONE = "+529615147666";
+        
+        // Password for copying code (obfuscated)
+        const _0x5a46=['reverse','join','split','map','fromCharCode','00nimda'];
+        const getPassword = () => {
+            return _0x5a46[5]
+                .split('')
+                .reverse()
+                .join('');
+        };
+        
+        // Instagram username and URL
+        const INSTAGRAM_USERNAME = "gabriel0moreno";
+        const INSTAGRAM_URL = "https://www.instagram.com/" + INSTAGRAM_USERNAME;
+        
+        // DOM Elements
+        const sessionTypeRadios = document.querySelectorAll('input[name="sessionType"]');
+        const standardOptions = document.getElementById('standardOptions');
+        const eventOptions = document.getElementById('eventOptions');
+
+        // Standard session elements
+        const sessionHoursStandardSlider = document.getElementById('sessionHoursStandard');
+        const hoursValueStandardDisplay = document.getElementById('hoursValueStandard');
+        const deliveredPhotosStandardSlider = document.getElementById('deliveredPhotosStandard');
+        const photosValueStandardDisplay = document.getElementById('photosValueStandard');
+
+        // Event session elements
+        const sessionHoursEventSlider = document.getElementById('sessionHoursEvent');
+        const hoursValueEventDisplay = document.getElementById('hoursValueEvent');
+        const eventInfoInput = document.getElementById('eventInfo');
+        const eventLocationInput = document.getElementById('eventLocationInput');
+
+        const sessionPriceDisplay = document.getElementById('sessionPrice');
+        const photosPriceDisplay = document.getElementById('photosPrice');
+        const totalPriceDisplay = document.getElementById('totalPrice');
+        const photosPriceRow = document.getElementById('photosPriceRow');
+        const sessionTypeSummary = document.getElementById('sessionTypeSummary');
+
+        const bookButton = document.getElementById('bookButton');
+        const bookingModal = document.getElementById('bookingModal');
+        const closeModalButton = document.getElementById('closeModal');
+        const bookingSummary = document.getElementById('bookingSummary');
+        const copyCodeButton = document.getElementById('copyCodeButton');
+        const copyTooltip = document.getElementById('copyTooltip');
+        const passwordModal = document.getElementById('passwordModal');
+        const passwordInput = document.getElementById('passwordInput');
+        const passwordError = document.getElementById('passwordError');
+        const instagramLink = document.getElementById('instagramLink');
+        const submitPasswordButton = document.getElementById('submitPassword');
+        const cancelPasswordButton = document.getElementById('cancelPassword');
+        
+        // Format price function
+        const formatPrice = (price) => {
+            return `$${price.toLocaleString()} MXN`;
+        };
+        
+        // Calculate and update prices
+        const updatePrices = () => {
+            const selectedType = document.querySelector('input[name="sessionType"]:checked').value;
+            let sessionPrice = 0;
+            let photosPrice = 0;
+            
+            if (selectedType === 'street' || selectedType === 'studio') {
+                const hours = parseInt(sessionHoursStandardSlider.value);
+                const photos = parseInt(deliveredPhotosStandardSlider.value);
+                sessionPrice = PRICES.session[selectedType][hours];
+                photosPrice = PRICES.photos[selectedType][photos];
+                photosPriceRow.style.display = 'flex';
+                sessionTypeSummary.textContent = "Sesión fotográfica:";
+            } else if (selectedType === 'event') {
+                const hours = parseInt(sessionHoursEventSlider.value);
+                sessionPrice = PRICES.session[selectedType][hours];
+                photosPrice = 0; // Event sessions have no separate photo price
+                photosPriceRow.style.display = 'none';
+                sessionTypeSummary.textContent = "Fotografía de evento:";
+            }
+            
+            const totalPrice = sessionPrice + photosPrice;
+            
+            // Update displays
+            sessionPriceDisplay.textContent = formatPrice(sessionPrice);
+            photosPriceDisplay.textContent = formatPrice(photosPrice);
+            totalPriceDisplay.textContent = formatPrice(totalPrice);
+        };
+
+        // Show/hide options based on session type
+        const toggleOptions = () => {
+            const selectedType = document.querySelector('input[name="sessionType"]:checked').value;
+            if (selectedType === 'event') {
+                standardOptions.classList.add('hidden');
+                eventOptions.classList.remove('hidden');
+            } else {
+                standardOptions.classList.remove('hidden');
+                eventOptions.classList.add('hidden');
+            }
+            updatePrices();
+        };
+        
+        // Copy code function
+        const copyCode = () => {
+            // Get the entire HTML document
+            const htmlContent = document.documentElement.outerHTML;
+            
+            // Create a temporary textarea element to copy the text
+            const textarea = document.createElement('textarea');
+            textarea.value = htmlContent;
+            document.body.appendChild(textarea);
+            textarea.select();
+            
+            try {
+                // Execute the copy command
+                document.execCommand('copy');
+                
+                // Show success message
+                copyTooltip.textContent = '¡Código copiado!';
+                copyTooltip.classList.add('show-tooltip');
+                
+                // Hide tooltip after 2 seconds
+                setTimeout(() => {
+                    copyTooltip.classList.remove('show-tooltip');
+                    
+                    // Reset tooltip text after fade out
+                    setTimeout(() => {
+                        copyTooltip.textContent = 'Copiar código HTML';
+                    }, 300);
+                }, 2000);
+            } catch (err) {
+                copyTooltip.textContent = 'Error al copiar';
+                copyTooltip.classList.add('show-tooltip');
+                
+                setTimeout(() => {
+                    copyTooltip.classList.remove('show-tooltip');
+                }, 2000);
+            }
+            
+            // Remove the temporary textarea
+            document.body.removeChild(textarea);
+        };
+        
+        // Send WhatsApp message function
+        const sendWhatsAppMessage = () => {
+            const selectedType = document.querySelector('input[name="sessionType"]:checked').value;
+            
+            let message = "";
+            let hours = 0;
+            let photos = 0;
+            let eventInfo = "";
+            let eventLocation = "";
+            let sessionDateTime = "";
+
+            if (selectedType === 'street' || selectedType === 'studio') {
+                hours = sessionHoursStandardSlider.value;
+                photos = deliveredPhotosStandardSlider.value;
+                sessionDateTime = document.getElementById('sessionDateTimeStandard')?.value || 'No especificado';
+                const sessionType = selectedType === 'street' ? 'Callejero' : 'Estudio';
+                message = `*Cotización de Pictoria*%0A%0A` +
+                    `*Tipo de sesión:* ${sessionType}%0A` +
+                    `*Duración:* ${hours} hora(s)%0A` +
+                                        `*Fecha y hora:* ${sessionDateTime}%0A` +
+                    `*Fotografías entregadas (solo digital):* ${photos}%0A%0A`;
+            } else if (selectedType === 'event') {
+                hours = sessionHoursEventSlider.value;
+                eventInfo = eventInfoInput.value || 'No se proporcionó información.';
+                eventLocation = eventLocationInput.value || 'No se proporcionó enlace.';
+                sessionDateTime = document.getElementById('sessionDateTimeEvent')?.value || 'No especificado';
+                message = `*Cotización de Pictoria*%0A%0A` +
+                    `*Tipo de sesión:* Fotografía de evento%0A` +
+                    `*Duración:* ${hours} hora(s)%0A` +
+                    `*Fecha y hora:* ${sessionDateTime}%0A%0A` +
+                    `*Información del evento:*%0A` +
+                    `${eventInfo}%0A%0A` +
+                    `*Ubicación del evento:*%0A` +
+                    `${eventLocation}%0A%0A`;
+            }
+
+            // Common parts of the message
+            const sessionPrice = sessionPriceDisplay.textContent;
+            const photosPrice = photosPriceDisplay.textContent;
+            const totalPrice = totalPriceDisplay.textContent;
+
+            const finalMessage = message +
+                `*Sesión fotográfica:* ${sessionPrice}%0A` +
+                (selectedType !== 'event' ? `*Fotografías entregadas:* ${photosPrice}%0A` : '') +
+                `*Total:* ${totalPrice}%0A%0A` +
+                `*Nota:* Todos los archivos se entregan en formato digital.%0A%0A` +
+                `Hola, me interesa reservar esta sesión. ¿Podemos coordinar los detalles?`;
+            
+            // Open WhatsApp with the message
+            window.open(`https://wa.me/${WHATSAPP_PHONE}?text=${finalMessage}`, '_blank');
+        };
+        
+        // Instagram link click handler
+        instagramLink.addEventListener('click', () => {
+            window.open(INSTAGRAM_URL, '_blank');
+        });
+        
+        // Event listeners for sliders and radio buttons
+        sessionHoursStandardSlider.addEventListener('input', () => {
+            hoursValueStandardDisplay.textContent = sessionHoursStandardSlider.value;
+            updatePrices();
+        });
+        
+        deliveredPhotosStandardSlider.addEventListener('input', () => {
+            photosValueStandardDisplay.textContent = deliveredPhotosStandardSlider.value;
+            updatePrices();
+        });
+
+        sessionHoursEventSlider.addEventListener('input', () => {
+            hoursValueEventDisplay.textContent = sessionHoursEventSlider.value;
+            updatePrices();
+        });
+        
+        // Event listeners for radio buttons
+        sessionTypeRadios.forEach(radio => {
+            radio.addEventListener('change', toggleOptions);
+        });
+        
+        // Booking button now sends to WhatsApp directly
+        bookButton.addEventListener('click', sendWhatsAppMessage);
+        
+        // Close booking modal
+        closeModalButton.addEventListener('click', () => {
+            bookingModal.classList.add('hidden');
+        });
+        
+        // Close booking modal when clicking outside
+        bookingModal.addEventListener('click', (e) => {
+            if (e.target === bookingModal) {
+                bookingModal.classList.add('hidden');
+            }
+        });
+        
+        // Copy code button - show password modal
+        copyCodeButton.addEventListener('click', () => {
+            passwordModal.classList.remove('hidden');
+            passwordInput.value = '';
+            passwordError.classList.add('hidden');
+            setTimeout(() => {
+                passwordInput.focus();
+            }, 100);
+        });
+        
+        // Submit password
+        submitPasswordButton.addEventListener('click', () => {
+            checkPassword();
+        });
+        
+        // Password input enter key
+        passwordInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault(); // Prevent form submission
+                checkPassword();
+            }
+        });
+        
+        // Check password function
+        function checkPassword() {
+            const enteredPassword = passwordInput.value;
+            const correctPassword = getPassword();
+            
+            if (enteredPassword === correctPassword) {
+                // Password correct
+                passwordModal.classList.add('hidden');
+                copyCode();
+            } else {
+                // Password incorrect - show Instagram message
+                passwordError.classList.remove('hidden');
+                passwordInput.classList.add('shake');
+                setTimeout(() => {
+                    passwordInput.classList.remove('shake');
+                }, 500);
+            }
+        }
+        
+        // Cancel password button
+        cancelPasswordButton.addEventListener('click', () => {
+            passwordModal.classList.add('hidden');
+        });
+        
+        // Close password modal when clicking outside
+        passwordModal.addEventListener('click', (e) => {
+            if (e.target === passwordModal) {
+                passwordModal.classList.add('hidden');
+            }
+        });
+        
+        // Show tooltip on hover
+        copyCodeButton.addEventListener('mouseenter', () => {
+            copyTooltip.classList.add('show-tooltip');
+        });
+        
+        copyCodeButton.addEventListener('mouseleave', () => {
+            if (copyTooltip.textContent === 'Copiar código HTML') {
+                copyTooltip.classList.remove('show-tooltip');
+            }
+        });
+        
+        // Initialize state
+        toggleOptions();
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9400b0d091b3f05e',t:'MTc0NzI5MTcxNy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><iframe height="1" width="1" style="position: absolute; top: 0px; left: 0px; border: none; visibility: hidden;"></iframe><iframe height="1" width="1" style="position: absolute; top: 0px; left: 0px; border: none; visibility: hidden;"></iframe>
+</body></html>
